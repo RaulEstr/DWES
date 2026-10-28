@@ -1,0 +1,4 @@
+raul, Hombre, DM, condiciones: Mal de ojo
+maria, Mujer, AF, condiciones: TDAH, Diabetes
+alberto, Hombre, DW, condiciones: Ninguna
+alberto, Hombre, DW, condiciones: Ninguna

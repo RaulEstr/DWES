@@ -1,0 +1,5 @@
+Coca cola;1.50
+Fanta;2.50
+Sprite;2.00
+Agua con gas;1.00
+Cerveza rubia;2.00
