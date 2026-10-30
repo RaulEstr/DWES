@@ -19,6 +19,7 @@
     </div>
     <div id="menu">
         <a href="index.php">Home</a>
+        <a href="registro.php">Login</a>
     </div>
     <div id="container">
         <div id="bar">
