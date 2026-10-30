@@ -1,21 +1,45 @@
 <?php
     require_once __DIR__."/header.php";
-
+    require "../../vendor/autoload.php";
+    use PHPMailer\PHPMailer\PHPMailer;  use PHPMailer\PHPMailer\Exception;
     $self = htmlentities($_SERVER["PHP_SELF"]);
-
     $msg = "";
     if(isset($_POST["botonSubmit"])) {
         $usuario = trim($_POST["usuario"]);
         $nombre = trim($_POST["nombre"]);
-        $password1 = $_POST["password1"];
-        $password2 = $_POST["password2"];
+        $password = $_POST["password"];
         $email = trim($_POST["email"]);
 
         if(existeUsuario($conexion, $usuario)) {
             $msg = "Ya existe el usuario $usuario";
         }
         else {
-            
+            $id = registrarUsuario($conexion, $usuario, $nombre, $password, $email);
+            if($id != 0){
+                $registrado = datosUsuario($conexion, $id)[0];
+                $mail=new PHPMailer();
+                try{
+                    $mail -> IsSMTP();
+                    $mail -> SMTPAuth = false;    
+                    $mail -> Host = "localhost";
+                    $mail -> Port = 1025;
+
+                    $mail -> From = "accounts@$dominio";
+                    $mail -> FromName = $foro;
+                    $mail -> AddAddress($registrado->email);
+
+                    $mail -> isHTML(true);
+                    $mail -> Subject = "Activa la cuenta";
+                    $mail -> Body = "<a href=\"$host/verificacion.php?email=$registrado->email&cadena=$registrado->cadenaverificacion\">Pulsa aqui para activar tu cuenta</a>";
+                    
+                    $mail -> send();
+                }catch(Exception $e){    
+                    $msg = "No se ha podido mandar el correo para activar la cuenta";
+                }
+            }
+            else {
+                $msg = "No se ha podido registrar el usuario";
+            }
         }
     }
 
@@ -36,11 +60,11 @@
             echo "</tr>";
             echo "<tr>";
                 echo "<td>Password</td>";
-                echo "<td><input type=\"password\" name=\"password1\" id=\"password1\"></td>";
+                echo "<td><input type=\"password\" name=\"password\" id=\"password1\"></td>";
             echo "</tr>";
             echo "<tr>";
                 echo "<td>Password (de nuevo)</td>";
-                echo "<td><input type=\"password\" name=\"password2\" id=\"password2\"></td>";
+                echo "<td><input type=\"password\" id=\"password2\"></td>";
             echo "</tr>";
             echo "<tr>";
                 echo "<td>Email</td>";
@@ -52,7 +76,7 @@
             echo "</tr>";
         echo "</table>";
     echo "</form>";
-    echo "<script src=\"registro.js\" defer></script>";
+    // echo "<script src=\"registro.js\" defer></script>";
 
     require_once __DIR__."/foot.php";
 ?>

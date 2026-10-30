@@ -1,7 +1,7 @@
 <?php
     require_once __DIR__."/config.php";
     require_once "modelo.php";
-    $conexion = conexion($bbdd, $usario, $contrasenia);
+    $conexion = conexion($bbdd, $usariobbdd, $contraseniabbdd);
     if(!$conexion) {
         echo "Error de conexion a base de datos";
         exit();

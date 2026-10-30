@@ -86,22 +86,74 @@
             $st -> bindParam(5, $cadena);
             $activo = 0;
             $st -> bindParam(6, $activo);
+            $st -> execute();
+            if($st->rowCount() == 1) {
+                return $conexion -> lastInsertId();
+            }
+            else {
+                return 0;
+            }
         } catch(PDOException $e) {
-
+            return 0;
         }
     }
 
     function generarCadena() {
-        $randomValues = random_int(50,100);
         $chars = ["a","b","c","d","e","f","g","h","i","j","k","l","m",
         "n","o","p","q","r","s","t","u","v","w","x","y","z","1","2",
         "3","4","5","6","7","8","9","0","@","!","¿","¡","?","*","-"];
         $cadena = "";
-        for($i = 0; $i < $randomValues; $i++) {
+        for($i = 1; $i <= 16; $i++) {
             $numRandom = random_int(0, count($chars) - 1);
             $cadena .= $chars[$numRandom];
         }
 
         return $cadena;
+    }
+
+    function datosUsuario(PDO $conexion, $idusuario) {
+        try {
+            $sql = "SELECT id, username, nombre, password, email, cadenaverificacion, activo, falso from usuarios where id = ?";
+            $st = $conexion -> prepare($sql);
+            $st -> setFetchMode(PDO::FETCH_OBJ);
+            $st -> bindParam(1, $idusuario);
+            $st -> execute();
+            return $st -> fetchAll();
+        } catch(PDOException $e) {
+            return [];
+        }
+    }
+
+    function activarCuenta(PDO $conexion, $email, $cadena) {
+        try {
+            $sql = "UPDATE usuarios set activo = 1 where email = ? and cadenaverificacion = ?";
+            $st = $conexion -> prepare($sql);
+            $st -> setFetchMode(PDO::FETCH_OBJ);
+            $st -> bindParam(1, $email);
+            $st -> bindParam(2, $cadena);
+            $st -> execute();
+            if($st->rowCount() == 1) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        } catch(PDOException $e) {
+            return false;
+        }
+    }
+
+    function login(PDO $conexion, $usuario, $password) {
+        try {
+            $sql = "SELECT id, username, activo from usuarios where username = ? and password = ?";
+            $st = $conexion -> prepare($sql);
+            $st -> setFetchMode(PDO::FETCH_OBJ);
+            $st -> bindParam(1, $usuario);
+            $st -> bindParam(2, $password);
+            $st -> execute();
+            return $st -> fetchAll();
+        } catch(PDOException $e) {
+            return [];
+        }
     }
 ?>
