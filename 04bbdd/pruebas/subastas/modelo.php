@@ -145,15 +145,106 @@
 
     function login(PDO $conexion, $usuario, $password) {
         try {
-            $sql = "SELECT id, username, activo from usuarios where username = ? and password = ?";
+            $sql = "SELECT id, username, activo, password from usuarios where username = ?";
             $st = $conexion -> prepare($sql);
             $st -> setFetchMode(PDO::FETCH_OBJ);
             $st -> bindParam(1, $usuario);
-            $st -> bindParam(2, $password);
+            $st -> execute();
+            $usuarios = $st -> fetchAll();
+    
+            if(password_verify($password, $usuarios[0]->password)) {
+                return $usuarios;
+            }
+            return [];
+
+        } catch(PDOException $e) {
+            return [];
+        }
+    }
+
+    function itemPorId(PDO $conexion, $itemId) {
+        try {
+            $sql = "SELECT id, id_cat, id_user, nombre, preciopartida, descripcion, fechafin, 
+            (SELECT count(id) from pujas where id_item = items.id) as cantPujas, 
+            (SELECT max(cantidad) from pujas where id_item = items.id) as precioActual 
+            from items 
+            where id = ?";
+            $st = $conexion -> prepare($sql);
+            $st -> setFetchMode(PDO::FETCH_OBJ);
+            $st -> bindParam(1, $itemId);
             $st -> execute();
             return $st -> fetchAll();
         } catch(PDOException $e) {
             return [];
+        }
+    }
+
+    function imagenesDeItem(PDO $conexion, $itemId) {
+        try {
+            $sql = "SELECT id, id_item, imagen from imagenes where id_item = ?";
+            $st = $conexion -> prepare($sql);
+            $st -> setFetchMode(PDO::FETCH_OBJ);
+            $st -> bindParam(1, $itemId);
+            $st -> execute();
+            return $st -> fetchAll();
+        } catch(PDOException $e) {
+            return [];
+        }
+    }
+
+    function pujasDeItem(PDO $conexion, $itemId) {
+        try {
+            $sql = "SELECT id, id_item, id_user, cantidad, fecha, 
+            (SELECt username from usuarios where id_user = usuarios.id) as nomUsuario, 
+            from pujas where id_item = ? order by fecha";
+            $st = $conexion -> prepare($sql);
+            $st -> setFetchMode(PDO::FETCH_OBJ);
+            $st -> bindParam(1, $itemId);
+            $st -> execute();
+            return $st -> fetchAll();
+        } catch(PDOException $e) {
+            return [];
+        }
+    }
+
+    function cantidadUltimaPuja(PDO $conexion, $itemId) {
+        try {
+            $sql =  "SELECT max(cantidad) as precioActual from pujas where id_item = ?";
+            $st = $conexion -> prepare($sql);
+            $st -> setFetchMode(PDO::FETCH_OBJ);
+            $st -> bindParam(1, $itemId);
+            $st -> execute();
+            return $st -> fetchAll();
+        } catch(PDOException $e) {
+            return [];
+        }
+    }
+
+    function cantidadPujasHoy(PDO $conexion, $itemId, $usuarioId) {
+        try {
+            $sql =  "SELECT count(id) as cantidadHoy from pujas where id_item = ? and id_user = ? and fecha = CURRENT_DATE";
+            $st = $conexion -> prepare($sql);
+            $st -> setFetchMode(PDO::FETCH_OBJ);
+            $st -> bindParam(1, $itemId);
+            $st -> bindParam(2, $usuarioId);
+            $st -> execute();
+            return $st -> fetchAll();
+        } catch(PDOException $e) {
+            return [];
+        }
+    }
+
+    function aniadirPuja(PDO $conexion, $itemId, $usuarioId, $cantidad) {
+        try {
+            $sql = "INSERT into pujas(id_item, id_user, cantidad, fecha) values (?,?,?, CURRENT_DATE)";
+            $st = $conexion -> prepare($sql);
+            $st -> setFetchMode(PDO::FETCH_OBJ);
+            $st -> bindParam(1, $itemId);
+            $st -> bindParam(2, $usuarioId);
+            $st -> bindParam(3, $cantidad);
+            $st -> execute();
+        } catch(PDOException $e) {
+            return false;
         }
     }
 ?>

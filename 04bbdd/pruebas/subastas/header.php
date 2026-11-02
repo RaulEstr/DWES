@@ -6,6 +6,9 @@
         echo "Error de conexion a base de datos";
         exit();
     }
+
+    session_start();
+
 ?>
 <html>
     <head>
@@ -19,7 +22,17 @@
     </div>
     <div id="menu">
         <a href="index.php">Home</a>
-        <a href="registro.php">Login</a>
+        <?php 
+        
+        if(isset($_SESSION["logedUserId"])) {
+            echo "<a href=\"logout.php\">Logout</a>";
+        }
+        else {
+            echo "<a href=\"login.php\">Login</a>";
+        }
+
+        ?>
+        
     </div>
     <div id="container">
         <div id="bar">

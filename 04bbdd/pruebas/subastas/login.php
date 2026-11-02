@@ -11,13 +11,25 @@
     if(isset($_POST["botonSubmit"])) {
         $usuarioLogin = login($conexion, $_POST["usuario"], $_POST["password"]);
         if(count($usuarioLogin) == 0) {
-            $msg = "El usuario o la contraseña son incorrectos";
+            $msg = "El usuario o la contraseña son incorrectos, intentalo de nuevo";
         }
         else {
             $usuarioLogin = $usuarioLogin[0];
+            if($usuarioLogin->activo == 0) {
+                $msg = "Esta cuenta no está verificada. Te hemos enviado un email para verificarla";
+            }
+            else {
+                $_SESSION["logedUserId"] = $usuarioLogin->id;
+                $_SESSION["logedUser"] = $usuarioLogin->username;
+                header("Location: ".$_SESSION["lastPage"]);
+                exit();
+            }
         }
     }
 
+    if($msg != "") {
+        echo "<p>$msg</p>";
+    }
     echo "<form action=\"$self\" method=\"post\">";
         echo "<table id=\"tabla\">";
             echo "<tr>";

@@ -1,5 +1,8 @@
 <?php
     require_once __DIR__."/header.php";
+    $self = htmlentities($_SERVER["PHP_SELF"]);
+
+    $_SESSION["lastPage"] = $_SESSION["currentPage"];
 
     $items = [];
     if(isset($_GET["id"])) {
