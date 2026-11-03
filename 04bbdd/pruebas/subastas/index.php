@@ -2,7 +2,7 @@
     require_once __DIR__."/header.php";
     $self = htmlentities($_SERVER["PHP_SELF"]);
 
-    $_SESSION["lastPage"] = $_SESSION["currentPage"];
+    $_SESSION["lastPage"] = $self;
 
     $items = [];
     if(isset($_GET["id"])) {

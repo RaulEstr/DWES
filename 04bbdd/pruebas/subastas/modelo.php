@@ -47,7 +47,7 @@
             (SELECT max(cantidad) from pujas where id_item = id) as maxPuja, preciopartida, fechafin, id_cat 
             from items";
             $st = $conexion->query($sql);
-            $st -> setFetchMode(PDO::FETCH_ASSOC);
+            $st -> setFetchMode(PDO::FETCH_OBJ);
             return $st -> fetchAll();
         } catch(PDOException $e) {
             return [];
@@ -243,6 +243,68 @@
             $st -> bindParam(2, $usuarioId);
             $st -> bindParam(3, $cantidad);
             $st -> execute();
+            if($st->rowCount() == 1) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        } catch(PDOException $e) {
+            return false;
+        }
+    }
+
+    function aniadirItem(PDO $conexion, $id_cat, $id_user, $nombre, $preciopartida, $descripcion, $fechafin) {
+        try {
+            $sql = "INSERT into items(id_cat, id_user, nombre, preciopartida, descripcion, fechafin) values (?,?,?,?,?,?)";
+            $st = $conexion -> prepare($sql);
+            $st -> setFetchMode(PDO::FETCH_OBJ);
+            $st -> bindParam(1, $id_cat);
+            $st -> bindParam(2, $id_user);
+            $st -> bindParam(3, $nombre);
+            $st -> bindParam(4, $preciopartida);
+            $st -> bindParam(5, $descripcion);
+            $st -> bindParam(6, $fechafin);
+            $st -> execute();
+            return $conexion -> lastInsertId();
+        } catch(PDOException $e) {
+            var_dump($e->getMessage());
+        }
+    }
+
+    function cambiarPrecio(PDO $conexion, $itemId, $nuevoPrecio) {
+        try {
+            $sql = "UPDATE items set preciopartida = ? where id = ?";
+            $st = $conexion -> prepare($sql);
+            $st -> setFetchMode(PDO::FETCH_OBJ);
+            $st -> bindParam(1, $nuevoPrecio);
+            $st -> bindParam(2, $itemId);
+            $st -> execute();
+            if($st->rowCount() == 1) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        } catch(PDOException $e) {
+            return false;
+        }
+    }
+
+    function cambiarHora(PDO $conexion, $itemId, $nuevaHora) {
+        try {
+            $sql = "UPDATE items set fechafin = ? where id = ?";
+            $st = $conexion -> prepare($sql);
+            $st -> setFetchMode(PDO::FETCH_OBJ);
+            $st -> bindParam(1, $nuevaHora);
+            $st -> bindParam(2, $itemId);
+            $st -> execute();
+            if($st->rowCount() == 1) {
+                return true;
+            }
+            else {
+                return false;
+            }
         } catch(PDOException $e) {
             return false;
         }

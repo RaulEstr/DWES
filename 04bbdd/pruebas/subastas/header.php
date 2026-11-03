@@ -6,8 +6,35 @@
         echo "Error de conexion a base de datos";
         exit();
     }
-
+    $self = htmlentities($_SERVER["PHP_SELF"]);
     session_start();
+
+    if(isset($_GET["index"])) {
+        header("Location: index.php");
+        exit();
+    }
+
+    if(isset($_GET["logout"])) {
+        header("Location: logout.php");
+        exit();
+    }
+
+    if(isset($_GET["login"])) {
+        header("Location: login.php");
+        exit();
+    }
+
+    if(isset($_GET["nuevoitem"])) {
+        if(isset($_SESSION["logedUserId"])) {
+            header("Location: nuevoitem.php");
+            exit(); 
+        }
+        else{
+            header("Location: login.php");
+            exit();
+        }
+        
+    }
 
 ?>
 <html>
@@ -21,15 +48,17 @@
         <h1><?php echo $foro ?></h1>
     </div>
     <div id="menu">
-        <a href="index.php">Home</a>
-        <?php 
-        
+        <?php
+        echo "<a href=\"$self?index\">Home</a>";
+         
         if(isset($_SESSION["logedUserId"])) {
-            echo "<a href=\"logout.php\">Logout</a>";
+            echo "<a href=\"$self?logout\">Logout</a>"; 
         }
         else {
-            echo "<a href=\"login.php\">Login</a>";
+            echo "<a href=\"$self?login\">Login</a>";
         }
+
+        echo "<a href=\"$self?nuevoitem\">Nuevo item</a>";
 
         ?>
         
