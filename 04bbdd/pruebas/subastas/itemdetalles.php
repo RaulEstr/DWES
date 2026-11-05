@@ -3,22 +3,26 @@
     $self = htmlentities($_SERVER["PHP_SELF"]);
     $_SESSION["lastPage"] = $self;
 
-    $itemID = 0;
-    if(isset($_GET["itemID"])) {
-        $itemID = $_GET["itemID"];
-    }
+    
+    $itemID = $_SESSION["itemID"];
 
     $msg = "";
     if(isset($_POST["pujar"])) {
-        if(cantidadUltimaPuja($conexion, $itemID)[0]->precioActual >= $_POST["puja"]) {
-            $msg = "Puja muy baja!";
-        }
-        else if (cantidadPujasHoy($conexion, $itemID, $_SESSION["logedUserId"])[0]->cantidadHoy >= 3) {
-            $msg = "Límite de 3 pujas por día";
+        if($_POST["puja"] == "") {
+            $msg = "Tienes que introducir una puja";
         }
         else {
-            
+            if(cantidadUltimaPuja($conexion, $itemID)[0]->precioActual >= $_POST["puja"]) {
+                $msg = "Puja muy baja!";
+            }
+            else if (cantidadPujasHoy($conexion, $itemID, $_SESSION["logedUserId"])[0]->cantidadHoy >= 3) {
+                $msg = "Límite de 3 pujas por día";
+            }
+            else {
+                aniadirPuja($conexion, $itemID, $_SESSION["logedUserId"], $_POST["puja"]);
+            }
         }
+        
     }
 
     $item = itemPorId($conexion, $itemID)[0];
@@ -29,7 +33,12 @@
 
     echo "<p>";
         echo "<strong>Número de pujas:</strong> $item->cantPujas - ";
-        echo "<strong>Precio actual:</strong> $item->precioActual - ";
+        if($item->precioActual == null) {
+            echo "<strong>Precio actual:</strong> $item->preciopartida - ";
+        }
+        else {
+            echo "<strong>Precio actual:</strong> $item->precioActual €- ";
+        }
         echo "<strong>Fecha fin para pujar:</strong> $item->fechafin";
     echo "</p>";
 
@@ -47,7 +56,7 @@
         echo "<form method=\"post\" action=\"$self\">";
             echo "<table>";
                 echo "<tr>";
-                    echo "<td><input type=\"number\" name=\"puja\"></td>";
+                    echo "<td><input type=\"number\" name=\"puja\">€</td>";
                     echo "<td><input type=\"submit\" name=\"pujar\" value=\"¡Puja!\"></td>";
                     if($msg != "") {
                         echo "<td style=\"color:red\">$msg</td>";

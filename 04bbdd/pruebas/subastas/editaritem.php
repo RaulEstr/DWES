@@ -2,12 +2,12 @@
     require_once __DIR__."/header.php";
     $self = htmlentities($_SERVER["PHP_SELF"]);
 
-    if(!isset($_GET["itemid"])) {
+    if(!isset($_SESSION["itemID"])) {
         header("Location: index.php");
         exit();
     }
 
-    $itemId = $_GET["itemid"];
+    $itemId = $_SESSION["itemID"];
     $item = itemPorId($conexion, $itemId)[0];
 
     $msg = "";
@@ -48,6 +48,26 @@
         $nuevaFecha = $nuevaFecha -> format("Y-m-d H:i:s");
 
         cambiarHora($conexion, $itemId, $nuevaFecha);
+    }
+
+    if(isset($_POST["subirimg"])) {
+        if(is_uploaded_file($_FILES["imagen"]["tmp_name"])) {
+            $nombreImg = $_FILES["imagen"]["name"];
+            $i = 1;
+            while(existeImagen($conexion, $nombreImg)) {
+                $nombreImg = $_FILES["imagen"]["name"]."_".$i;
+                $i++;
+            }
+            aniadirImagen($conexion, $itemId, $nombreImg);
+            move_uploaded_file($_FILES["imagen"]["tmp_name"], $rutaImgs."/". $nombreImg);
+        }
+    }
+
+    if(isset($_GET["imagenId"])) {
+        if(existeImagenPorId($conexion, $_GET["imagenId"])) {
+            borrarImagen($conexion, $_GET["imagenId"]);
+            unlink($rutaImgs."/".$_GET["nombreImg"]);
+        }  
     }
 
     $imagenes = imagenesDeItem($conexion, $itemId);
@@ -94,13 +114,13 @@
             echo "<table>";
             foreach($imagenes as $imagen) {
                 echo "<tr>";
-                    echo "<td></td>";
-                    echo "<td><a>[BORRAR]</a></td>";
+                    echo "<td><img width=\"50\" src=\"$rutaImgs/$imagen->imagen\"></td>";
+                    echo "<td><a href=\"$self?imagenId=$imagen->id&nombreImg=$imagen->imagen\">[BORRAR]</a></td>";
                 echo "</tr>";
             }
             echo "</table>";
         }
-        echo "<form method=\"post\" action\"$self\">";
+        echo "<form method=\"post\" action\"$self\" enctype=\"multipart/form-data\">";
             echo "<table>";
                 echo "<tr>";
                     echo "<td>Imagen a subir</td>";

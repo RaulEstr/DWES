@@ -9,7 +9,7 @@
 
     if(isset($_GET["email"]) && isset($_GET["cadena"])) {
         if(activarCuenta($conexion, $_GET["email"], $_GET["cadena"])) {
-            echo "<h3>Se ha verificado tu cuenta. Puedes entrar punchando <a href=\"$self?login\">log in</a></h3>";
+            echo "<h3>Se ha verificado tu cuenta. Puedes entrar pinchando <a href=\"$self?login\">log in</a></h3>";
         }
         else {
             echo "<h3>No se puede verificar dicha cuenta</h3>";

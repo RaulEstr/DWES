@@ -24,6 +24,16 @@
         exit();
     }
 
+    if(isset($_GET["vencidas"])) {
+        header("Location: vencidas.php");
+        exit();
+    }
+
+    if(isset($_GET["publi"])) {
+        header("Location: publi.php");
+        exit();
+    }
+
     if(isset($_GET["nuevoitem"])) {
         if(isset($_SESSION["logedUserId"])) {
             header("Location: nuevoitem.php");
@@ -49,16 +59,21 @@
     </div>
     <div id="menu">
         <?php
-        echo "<a href=\"$self?index\">Home</a>";
+        echo "<a href=\"$self?index\">Home  </a>";
          
         if(isset($_SESSION["logedUserId"])) {
-            echo "<a href=\"$self?logout\">Logout</a>"; 
+            echo "<a href=\"$self?logout\">Logout   </a>";
+            echo "<a href=\"$self?nuevoitem\">Nuevo item    </a>";
+            if($_SESSION["logedUser"] == "admin") {
+                echo "<a href=\"$self?vencidas\">Subastas vencidas   </a>";
+                echo "<a href=\"$self?publi\">Anunciantes    </a>";
+            }
         }
         else {
-            echo "<a href=\"$self?login\">Login</a>";
+            echo "<a href=\"$self?login\">Login </a>";
         }
 
-        echo "<a href=\"$self?nuevoitem\">Nuevo item</a>";
+        
 
         ?>
         

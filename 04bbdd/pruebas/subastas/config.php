@@ -7,4 +7,5 @@
     $dominio = "subastasdews.com";
     $ruta = __DIR__;
     $moneda = "€";
+    $rutaImgs = "imgs";
 ?>

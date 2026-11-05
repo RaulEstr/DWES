@@ -24,15 +24,14 @@
             $min = $_POST["minuto"];
             $itemId = aniadirItem($conexion, $_POST["categoria"], $_SESSION["logedUserId"], $_POST["nombre"], $_POST["precio"], $_POST["descripcion"], "$anio-$mes-$dia $hora:$min");
             if($itemId != 0) {
-                header("Location: editaritem.php?itemid=$itemId");
+                $_SESSION["itemID"] = $itemId;
+                header("Location: editaritem.php");
                 exit();
             }
             else {
                 $msg .= "<p>No se ha podido añadir el item</p>";
             }
         }
-
-
     }
 
     $categorias = categorias($conexion);
