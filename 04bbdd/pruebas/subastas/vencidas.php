@@ -9,13 +9,17 @@
 
     if(isset($_POST["submit"])) {
         if(isset($_POST["items"])) {
-            $idsItems = implode(",", $_POST["items"]);
-            var_dump($idsItems);
-            $imagenes = imagenesDeItems($conexion, implode(",", $_POST["items"]));
-            var_dump($imagenes);
+            $imgs = [];
+            foreach($_POST["items"] as $itemId) {
+                $imgs[$itemId] = imagenesDeItem($conexion, $itemId);
+            }
             if(borrarItems($conexion, $_POST["items"])) {
-                foreach($imagenes as $imagen) {
-                    unlink($rutaImgs."/".$imagen->imagen);
+                foreach($_POST["items"] as $itemId) {
+                    foreach($imgs as $id=>$imagenes) {
+                        foreach($imagenes as $imagen) {
+                            unlink($rutaImgs."/".$imagen->imagen);
+                        } 
+                    }
                 }
             }
         }
