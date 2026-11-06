@@ -8,4 +8,6 @@
     $ruta = __DIR__;
     $moneda = "€";
     $rutaImgs = "imgs";
+    $carpetaArchivos = "archivos";
+    $archivo = "anunciantes.txt";
 ?>

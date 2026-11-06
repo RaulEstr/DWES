@@ -3,8 +3,16 @@
     $self = htmlentities($_SERVER["PHP_SELF"]);
     $_SESSION["lastPage"] = $self;
 
+    $itemID = 0;
+    if(isset($_GET["mailItemId"])) {
+        $_SESSION["itemID"] = $_GET["mailItemId"];
+    }
+
+    if(isset($_SESSION["itemID"])) {
+        $itemID = $_SESSION["itemID"];
+    }
     
-    $itemID = $_SESSION["itemID"];
+    
 
     $msg = "";
     if(isset($_POST["pujar"])) {
@@ -34,7 +42,7 @@
     echo "<p>";
         echo "<strong>Número de pujas:</strong> $item->cantPujas - ";
         if($item->precioActual == null) {
-            echo "<strong>Precio actual:</strong> $item->preciopartida - ";
+            echo "<strong>Precio actual:</strong> $item->preciopartida €- ";
         }
         else {
             echo "<strong>Precio actual:</strong> $item->precioActual €- ";

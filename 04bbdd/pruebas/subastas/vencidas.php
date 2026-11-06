@@ -2,6 +2,11 @@
     require_once __DIR__."/header.php";
     $self = htmlentities($_SERVER["PHP_SELF"]);
   
+    if(!isset($_SESSION["logedUser"]) || $_SESSION["logedUser"] != "admin") {
+        header("Location: index.php");
+        exit();
+    }
+
     if(isset($_POST["submit"])) {
         if(isset($_POST["items"])) {
             $idsItems = implode(",", $_POST["items"]);

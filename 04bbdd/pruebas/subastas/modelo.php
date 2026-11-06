@@ -138,7 +138,7 @@
 
     function itemsPorCategoria(PDO $conexion, $categoria) {
         try {
-            $sql = "SELECT id, nombre, 
+            $sql = "SELECT id, nombre, descripcion, 
             (SELECT imagen from imagenes where id_item = items.id limit 1) as imagen, 
             (SELECT count(*) from pujas where id_item = items.id) as cantidadPujas, 
             (SELECT max(cantidad) from pujas where id_item = items.id) as maxPuja, preciopartida, fechafin, id_cat, id_user 
@@ -156,7 +156,7 @@
 
     function todosLosItems(PDO $conexion) {
         try {
-            $sql = "SELECT id, nombre, 
+            $sql = "SELECT id, nombre, descripcion, 
             (SELECT imagen from imagenes where id_item = items.id limit 1) as imagen, 
             (SELECT count(*) from pujas where id_item = items.id) as cantidadPujas, 
             (SELECT max(cantidad) from pujas where id_item = items.id) as maxPuja, preciopartida, fechafin, id_cat, id_user 
@@ -278,6 +278,7 @@
             return false;
         }
     }
+
 
     // Tabla imagenes
 
@@ -435,6 +436,19 @@
             }
         } catch(PDOException $e) {
             return false;
+        }
+    }
+
+    function cantidadPujasDeItem($conexion, $itemID) {
+        try {
+            $sql = "SELECT count(*) as cantPujas from pujas where id_item = ?";
+            $st = $conexion -> prepare($sql);
+            $st -> setFetchMode(PDO::FETCH_OBJ);
+            $st -> bindParam(1, $itemID);
+            $st -> execute();
+            return $st -> fetchColumn();
+        } catch(PDOException $e) {
+            return -1;
         }
     }
 ?>
