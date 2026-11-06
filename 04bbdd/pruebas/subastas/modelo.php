@@ -177,7 +177,7 @@
             (SELECT nombre from usuarios where usuarios.id = (SELECT id_user from pujas where cantidad = maxPuja)) as ganador, 
             preciopartida, descripcion, fechafin, id_cat, id_user 
             from items 
-            where fechafin > CURRENT_DATE";
+            where fechafin < CURRENT_DATE";
             $st = $conexion->query($sql);
             $st -> setFetchMode(PDO::FETCH_OBJ);
             return $st -> fetchAll();

@@ -1,27 +1,15 @@
-let boton = document.getElementById("botonSubmit");
-let formu = document.getElementById("formu");
-let tabla = document.getElementById("tabla");
-boton.addEventListener("click", passwordCorrecta);
+let password1 = document.getElementById("password1");
+let password2 = document.getElementById("password2");
+let botonSubmit = document.getElementById("botonSubmit")
 
-let tr = document.createElement("tr");
-let td = document.createElement("td");
-tr.appendChild(td);
-td.setAttribute("colspan", "2");
+password1.addEventListener("input", comprobarPass);
+password2.addEventListener("input", comprobarPass);
 
-function passwordCorrecta(event) {
-    event.preventDefault();
-    tabla.appendChild(tr);
-
-    let password1 = document.getElementById("password1").value;
-    let password2 = document.getElementById("password2").value;
-
-    if(password1.trim() == "" || password2.trim() == "") {
-        td.textContent = "Las contraseñas no pueden estar vacias";
-    }
-    else if(password1 != password2) {
-        td.textContent = "Las contraseñas tienen que coincidir"
+function comprobarPass()  {
+    if(password1.value == password2.value) {  
+        botonSubmit.removeAttribute("disabled", "false");
     }
     else {
-        formu.submit();
+        botonSubmit.setAttribute("disabled", "true");
     }
 }

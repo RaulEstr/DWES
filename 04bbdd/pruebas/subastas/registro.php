@@ -81,14 +81,14 @@
                 echo "</tr>";
                 echo "<tr>";
                     echo "<td></td>";
-                    echo "<td><input id=\"botonSubmit\" type=\"submit\" name=\"botonSubmit\" value=\"Registrate\"></td>";
+                    echo "<td><input disabled=\"true\" id=\"botonSubmit\" type=\"submit\" name=\"botonSubmit\" value=\"Registrate\"></td>";
                 echo "</tr>";
             echo "</table>";
         echo "</form>";
     }
 
     
-    // echo "<script src=\"registro.js\" defer></script>";
+    echo "<script src=\"registro.js\" defer></script>";
 
     require_once __DIR__."/foot.php";
 ?>
