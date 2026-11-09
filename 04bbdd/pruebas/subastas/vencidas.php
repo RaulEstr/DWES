@@ -13,13 +13,13 @@
             foreach($_POST["items"] as $itemId) {
                 $imgs[$itemId] = imagenesDeItem($conexion, $itemId);
             }
+            
             if(borrarItems($conexion, $_POST["items"])) {
                 foreach($_POST["items"] as $itemId) {
-                    foreach($imgs as $id=>$imagenes) {
-                        foreach($imagenes as $imagen) {
-                            unlink($rutaImgs."/".$imagen->imagen);
-                        } 
-                    }
+                    $imagenes = $imgs[$itemId];
+                    foreach($imagenes as $imagen) {
+                        unlink($rutaImgs."/".$imagen->imagen);
+                    } 
                 }
             }
         }
