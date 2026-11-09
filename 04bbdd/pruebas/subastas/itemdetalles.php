@@ -12,7 +12,7 @@
         $itemID = $_SESSION["itemID"];
     }
     
-    
+    $item = itemPorId($conexion, $itemID);
 
     $msg = "";
     if(isset($_POST["pujar"])) {
@@ -20,10 +20,15 @@
             $msg = "Tienes que introducir una puja";
         }
         else {
-            if(cantidadUltimaPuja($conexion, $itemID)[0]->precioActual >= $_POST["puja"]) {
+            $cantidadUltimaPuja = cantidadUltimaPuja($conexion, $itemID)->precioActual;
+            if($cantidadUltimaPuja == null) {
+                $cantidadUltimaPuja = $item->preciopartida;
+            }
+            
+            if($cantidadUltimaPuja >= $_POST["puja"]) {
                 $msg = "Puja muy baja!";
             }
-            else if (cantidadPujasHoy($conexion, $itemID, $_SESSION["logedUserId"])[0]->cantidadHoy >= 3) {
+            else if (cantidadPujasHoy($conexion, $itemID, $_SESSION["logedUserId"])->cantidadHoy >= 3) {
                 $msg = "Límite de 3 pujas por día";
             }
             else {
@@ -33,7 +38,7 @@
         
     }
 
-    $item = itemPorId($conexion, $itemID)[0];
+    
     $imagenes = imagenesDeItem($conexion, $itemID);
     $pujas = pujasDeItem($conexion, $itemID);
 
@@ -50,8 +55,8 @@
         echo "<strong>Fecha fin para pujar:</strong> $item->fechafin";
     echo "</p>";
 
-    foreach($imagenes as $imagen) {
-        
+    foreach($imagenes as $img) {
+        echo "<img width=\"50\" height=\"50\" src=\"$rutaImgs/".$img->imagen."\">";
     }
 
     echo "<p>$item->descripcion</p>";

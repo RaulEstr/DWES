@@ -8,7 +8,7 @@
     }
 
     $itemId = $_SESSION["itemID"];
-    $item = itemPorId($conexion, $itemId)[0];
+    $item = itemPorId($conexion, $itemId);
 
     $msg = "";
     if(isset($_POST["subir"])) {

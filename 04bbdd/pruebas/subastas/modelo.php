@@ -77,7 +77,7 @@
             $st -> setFetchMode(PDO::FETCH_OBJ);
             $st -> bindParam(1, $idusuario);
             $st -> execute();
-            return $st -> fetchAll();
+            return $st -> fetch();
         } catch(PDOException $e) {
             return [];
         }
@@ -109,15 +109,18 @@
             $st -> setFetchMode(PDO::FETCH_OBJ);
             $st -> bindParam(1, $usuario);
             $st -> execute();
-            $usuarios = $st -> fetchAll();
+            $usuario = $st -> fetch();
     
-            if(password_verify($password, $usuarios[0]->password)) {
-                return $usuarios;
+            if($usuario == null) {
+                return null;
             }
-            return [];
+            if(password_verify($password, $usuario->password)) {
+                return $usuario;
+            }
+            return null;
 
         } catch(PDOException $e) {
-            return [];
+            return null;
         }
     }
 
@@ -197,7 +200,7 @@
             $st -> setFetchMode(PDO::FETCH_OBJ);
             $st -> bindParam(1, $itemId);
             $st -> execute();
-            return $st -> fetchAll();
+            return $st -> fetch();
         } catch(PDOException $e) {
             return [];
         }
@@ -288,19 +291,6 @@
             $st = $conexion -> prepare($sql);
             $st -> setFetchMode(PDO::FETCH_OBJ);
             $st -> bindParam(1, $itemId);
-            $st -> execute();
-            return $st -> fetchAll();
-        } catch(PDOException $e) {
-            return [];
-        }
-    }
-
-    function imagenesDeItems(PDO $conexion, $items) {
-        try {
-            $sql = "SELECT id, id_item, imagen from imagenes where id_item in (?)";
-            $st = $conexion -> prepare($sql);
-            $st -> setFetchMode(PDO::FETCH_OBJ);
-            $st -> bindParam(1, $items);
             $st -> execute();
             return $st -> fetchAll();
         } catch(PDOException $e) {
@@ -399,7 +389,7 @@
             $st -> setFetchMode(PDO::FETCH_OBJ);
             $st -> bindParam(1, $itemId);
             $st -> execute();
-            return $st -> fetchAll();
+            return $st -> fetch();
         } catch(PDOException $e) {
             return [];
         }
@@ -413,7 +403,7 @@
             $st -> bindParam(1, $itemId);
             $st -> bindParam(2, $usuarioId);
             $st -> execute();
-            return $st -> fetchAll();
+            return $st -> fetch();
         } catch(PDOException $e) {
             return [];
         }

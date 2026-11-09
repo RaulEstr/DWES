@@ -18,7 +18,7 @@
         else {
             $id = registrarUsuario($conexion, $usuario, $nombre, $password, $email);
             if($id != 0){
-                $registrado = datosUsuario($conexion, $id)[0];
+                $registrado = datosUsuario($conexion, $id);
                 $mail=new PHPMailer();
                 try{
                     $mail -> IsSMTP();
