@@ -124,6 +124,55 @@
         }
     }
 
+    function usuariosInactivos(PDO $conexion) {
+        try {
+            $sql = "SELECT id, username, nombre, password, email, cadenaverificacion, activo, falso 
+            from usuarios 
+            where activo = 0";
+            $st = $conexion->query($sql);
+            $st -> setFetchMode(PDO::FETCH_OBJ);
+            return $st -> fetchAll();
+        } catch(PDOException $e) {
+            return [];
+        }
+    }
+
+    function borrarUsuario(PDO $conexion, $usuarioId) {
+        try {
+            $sql = "DELETE from usuarios where id = ?";
+            $st = $conexion -> prepare($sql);
+            $st -> setFetchMode(PDO::FETCH_OBJ);
+            $st -> bindParam(1, $usuarioId);
+            $st -> execute();
+            if($st->rowCount() == 1) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        } catch(PDOException $e) {
+            return false;
+        }
+    }
+
+    function activarCuentaPorAdmin(PDO $conexion, $usuarioId) {
+        try {
+            $sql = "UPDATE usuarios set activo = 1 where id = ?";
+            $st = $conexion -> prepare($sql);
+            $st -> setFetchMode(PDO::FETCH_OBJ);
+            $st -> bindParam(1, $usuarioId);
+            $st -> execute();
+            if($st->rowCount() == 1) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        } catch(PDOException $e) {
+            return false;
+        }
+    }
+
     // Tabla categorias
 
     function categorias(PDO $conexion) {
@@ -282,6 +331,20 @@
         }
     }
 
+    function itemsPujasHoy(PDO $conexion) {
+        try {
+            $sql = "SELECT id, id_cat, id_user, nombre, preciopartida, descripcion, fechafin 
+            from items 
+            where id in (SELECT id_item from pujas where fecha = CURRENT_DATE)";
+            $st = $conexion -> prepare($sql);
+            $st -> setFetchMode(PDO::FETCH_OBJ);
+            $st -> execute();
+            return $st -> fetchAll();
+        } catch(PDOException $e) {
+            return [];
+        }
+    }
+
 
     // Tabla imagenes
 
@@ -372,6 +435,7 @@
             $sql = "SELECT id, id_item, id_user, cantidad, fecha, 
             (SELECT username from usuarios where id_user = usuarios.id) as nomUsuario 
             from pujas where id_item = ? order by fecha";
+            
             $st = $conexion -> prepare($sql);
             $st -> setFetchMode(PDO::FETCH_OBJ);
             $st -> bindParam(1, $itemId);
@@ -439,6 +503,38 @@
             return $st -> fetchColumn();
         } catch(PDOException $e) {
             return -1;
+        }
+    }
+
+    function pujasDeHoy($conexion, $itemId) {
+        try {
+            $sql = "SELECT id, id_item, id_user, cantidad, fecha, 
+            (SELECT username from usuarios where id_user = usuarios.id) as nomUsuario 
+            from pujas where id_item = ? and fecha = CURRENT_DATE order by cantidad desc";
+            
+            $st = $conexion -> prepare($sql);
+            $st -> setFetchMode(PDO::FETCH_OBJ);
+            $st -> bindParam(1, $itemId);
+            $st -> execute();
+            return $st -> fetchAll();
+        } catch(PDOException $e) {
+            return [];
+        }
+    }
+
+    function pujasAnteriores($conexion, $itemId) {
+        try {
+            $sql = "SELECT id, id_item, id_user, cantidad, fecha, 
+            (SELECT username from usuarios where id_user = usuarios.id) as nomUsuario 
+            from pujas where id_item = ? and fecha < CURRENT_DATE order by cantidad desc";
+            
+            $st = $conexion -> prepare($sql);
+            $st -> setFetchMode(PDO::FETCH_OBJ);
+            $st -> bindParam(1, $itemId);
+            $st -> execute();
+            return $st -> fetchAll();
+        } catch(PDOException $e) {
+            return [];
         }
     }
 ?>

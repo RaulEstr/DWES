@@ -38,7 +38,7 @@
         
     }
 
-    
+    $item = itemPorId($conexion, $itemID);
     $imagenes = imagenesDeItem($conexion, $itemID);
     $pujas = pujasDeItem($conexion, $itemID);
 
@@ -47,10 +47,10 @@
     echo "<p>";
         echo "<strong>Número de pujas:</strong> $item->cantPujas - ";
         if($item->precioActual == null) {
-            echo "<strong>Precio actual:</strong> $item->preciopartida €- ";
+            echo "<strong>Precio actual:</strong> $item->preciopartida € - ";
         }
         else {
-            echo "<strong>Precio actual:</strong> $item->precioActual €- ";
+            echo "<strong>Precio actual:</strong> $item->precioActual € - ";
         }
         echo "<strong>Fecha fin para pujar:</strong> $item->fechafin";
     echo "</p>";

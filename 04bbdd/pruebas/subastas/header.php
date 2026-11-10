@@ -34,6 +34,17 @@
         exit();
     }
 
+    if(isset($_GET["inactivos"])) {
+        header("Location: inactivos.php");
+        exit();
+    }
+
+    if(isset($_GET["pujashoy"])) {
+        header("Location: pujas_hoy.php");
+        exit();
+    }
+
+
     if(isset($_GET["nuevoitem"])) {
         if(isset($_SESSION["logedUserId"])) {
             header("Location: nuevoitem.php");
@@ -67,6 +78,8 @@
             if($_SESSION["logedUser"] == "admin") {
                 echo "<a href=\"$self?vencidas\">Subastas vencidas   </a>";
                 echo "<a href=\"$self?publi\">Anunciantes    </a>";
+                echo "<a href=\"$self?inactivos\">Inactivos </a>";
+                echo "<a href=\"$self?pujashoy\">Pujas hoy  </a>";
             }
         }
         else {
