@@ -1,0 +1,51 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: docker_apache_php
+    ports:
+      - "80:80"
+    volumes:
+      - ./htdocs:/var/www/html
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - xampp_net
+
+  db:
+    image: mysql:8.0
+    container_name: docker_mysql
+    # restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+    networks:
+      - xampp_net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: docker_phpmyadmin
+    # restart: always
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: root
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - xampp_net
+
+networks:
+  xampp_net:
+    driver: bridge

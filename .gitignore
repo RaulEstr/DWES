@@ -1,0 +1,3 @@
+# MySQL runtime files
+mysql_data/mysql.sock
+mysql_data/*.sock
