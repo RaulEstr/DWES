@@ -53,4 +53,28 @@ class MCursos extends Model {
         $sql = "INSERT into asistentes(dni, nombre, telefono) values ('$asistente->dni', '$asistente->nombre', '$asistente->telefono')";
         return $this->bd->query($sql);
     }
+
+    public function edificios() {
+        $sql = "SELECT idedificio, nombre from edificios order by nombre";
+        $rs = $this->bd->query($sql);
+        return $rs->getResultObject();
+    }
+
+    public function aulas($edificio) {
+        $sql = "SELECT idedificio, numero, capacidad from aulas where idedificio = '$edificio' order by numero";
+        $rs = $this->bd->query($sql);
+        return $rs->getResultObject();
+    }
+
+    public function temas() {
+        $sql = "SELECT idtema, tema, categoria from temas order by categoria, tema";
+        $rs = $this->bd->query($sql);
+        return $rs->getResultObject();
+    }
+
+    public function edificio($idedificio) {
+        $sql = "SELECT idedificio, nombre from edificios where idedificio = '$idedificio'";
+        $rs = $this->bd->query($sql);
+        return $rs->getRowObject();
+    }
 }

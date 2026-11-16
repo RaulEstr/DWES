@@ -1,4 +1,4 @@
 
-<h2>FOOTER</h2>    
+<hr>
 </body>
 </html>
