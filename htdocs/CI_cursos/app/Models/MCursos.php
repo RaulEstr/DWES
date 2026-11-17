@@ -77,4 +77,50 @@ class MCursos extends Model {
         $rs = $this->bd->query($sql);
         return $rs->getRowObject();
     }
+
+    public function insertarCurso($curso) {
+        $sql = "INSERT into cursos (idedificio, num_aula, dia, idtema, asistentes, precio) 
+                values ('$curso->idedificio', $curso->num_aula, '$curso->dia', '$curso->idtema', 0, $curso->precio)";
+        $insertado = $this->bd->query($sql);
+        if(!$insertado) {
+            return false;
+        }
+
+        return $this->bd->insertID();
+    }
+
+    public function curso ($id) {
+        $sql = "SELECT idcurso, idedificio, num_aula, dia, idtema, asistentes, precio 
+        from cursos 
+        where idcurso = $id";
+        $rs = $this->bd->query($sql);
+        return $rs->getRowObject();
+    }
+
+    public function cursosDeAula($idEdificio, $numero) {
+        $sql = "SELECT idcurso, idedificio, num_aula, dia, idtema, asistentes, precio,
+        (SELECT tema from temas where temas.idtema = cursos.idtema) as tema 
+        from cursos 
+        where idedificio = '$idEdificio' and num_aula = $numero";
+        $rs = $this->bd->query($sql);
+        return $rs->getResultObject();
+    }
+
+    public function actualizarTema($idtema, $tema) {
+        $sql = "UPDATE temas set tema = '$tema' where idtema = '$idtema'";
+        $actualizado = $this->bd->query($sql);
+        if($actualizado) {
+            return true;
+        }
+        return false;
+    }
+
+    public function actualizarCurso($idcurso, $dia, $asistentes, $precio) {
+        $sql = "UPDATE cursos set dia = '$dia', asistentes = $asistentes, precio = $precio where idcurso = $idcurso";
+        $actualizado = $this->bd->query($sql);
+        if($actualizado) {
+            return true;
+        }
+        return false;
+    }
 }

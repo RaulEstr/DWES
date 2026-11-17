@@ -13,3 +13,6 @@ $routes->match(["GET", "POST"], "/newasistente", "CCursos::newasistente");
 // $routes->get("/programar/(:alphanum)", "CProgramar::nuevoCurso/$1");
 $routes->match(["GET", "POST"], "/programar", "CProgramar::elegirSede");
 $routes->match(["GET", "POST"], "/programar/(:alphanum)", "CProgramar::nuevoCurso/$1");
+
+$routes->match(["GET", "POST"], "/Edificio/(:any)/(:any)", "CAulas::cursosAulas/$1/$2");
+$routes->get("/Edificio/(:any)", "CAulas::detallesEdificio/$1");

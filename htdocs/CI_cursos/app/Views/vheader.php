@@ -31,6 +31,10 @@
         .red {
             color: red;
         }
+        strong {
+            margin: 0px;
+            padding: 0px;
+        }
     </style>
 </head>
 <h2>CURSOS</h2>

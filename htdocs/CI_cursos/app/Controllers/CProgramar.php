@@ -30,7 +30,31 @@ class CProgramar extends BaseController
 
     public function nuevoCurso($idedificio) {
         if($this->request->getPost("submitNuevoCurso"))  {
-            echo "AAAAAAAAAAAAAAAAAAAAAA";
+            $num_aula = $this->request->getPost("num_aula");
+            $idtema = $this->request->getPost("idtema");
+            $dia = $this->request->getPost("dia");
+            $precio = $this->request->getPost("precio");
+            if(!empty($num_aula) && !empty($idtema) && !empty($dia) && !empty($precio)) {
+                $newCurso = (object)["idedificio" => $idedificio, "num_aula"=>$num_aula, "dia"=>$dia, "idtema"=>$idtema, "precio"=>$precio];
+                $idNuevoCurso = $this->model->insertarCurso($newCurso);
+                if($idNuevoCurso) {
+                    $datos["curso"] = $this->model->curso($idNuevoCurso);
+                    echo view("vheader");
+                    echo view("programar/vvercurso", $datos);
+                    echo view("vfooter");
+                    return;
+                }
+                else {
+                    $datos["error"] = "Error al al crear curso";
+                }
+            }
+            else {
+                $datos["error"] = "Faltan datos";
+                $datos["num_aula"] = $num_aula;
+                $datos["dia"] = $dia;
+                $datos["precio"] = $precio;
+                $datos["idtema"] = $idtema;
+            }
         }
         $datos["edificio"] = $this->model->edificio($idedificio);
         $datos["aulas"] = $this->model->aulas($idedificio);
@@ -39,4 +63,6 @@ class CProgramar extends BaseController
         echo view("programar/vnuevocurso", $datos);
         echo view("vfooter");
     }
+
+    
 }
