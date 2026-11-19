@@ -16,6 +16,7 @@ else {
             echo "<tr>";
                 echo "<td>$aula->numero</td>";
                 echo "<td>$aula->capacidad personas</td>";
+                // Cambiar /Edificio/ por /Edificio2/ par ala forma 2
                 $enlace = site_url()."/Edificio/$edificio->idedificio/$aula->numero";
                 echo "<td>".anchor($enlace, "Ver cursos")."</td>";
             echo "</tr>";

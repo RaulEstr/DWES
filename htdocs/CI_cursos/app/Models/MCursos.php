@@ -123,4 +123,14 @@ class MCursos extends Model {
         }
         return false;
     }
+
+    public function asistente($dni) {
+        $sql = "SELECT dni, nombre, telefono from asistentes where dni = '$dni'";
+        $rs = $this->bd->query($sql);
+        return $rs->getRowObject();
+    }
+
+    public function cursosDeAsistente($dni) {
+        $sql = "SELECT temas.tema, cursos.dia from temas, cursos, asistencias where temas.idtema = cursos.idtema and asistencias.idcurso = cursos.idcurso and asistencias.dni = '$dni'";
+    }
 }
