@@ -20,3 +20,4 @@ $routes->get("/Edificio2/(:alphanum)", "CAulas::detallesEdificio2/$1");
 // Ejercicio 2
 $routes->match(["GET", "POST"], "/Login", "CAsistentes::login");
 $routes->match(["GET", "POST"], "/Asistente/(:alphanum)", "CAsistentes::datosAsistente/$1");
+$routes->match(["GET", "POST"], "/Gestion/asistentes", "CAsistentes::gestion");

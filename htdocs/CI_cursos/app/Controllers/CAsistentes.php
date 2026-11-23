@@ -17,6 +17,10 @@ class CAsistentes extends BaseController
             $password = $this->request->getPost("password");
             $login = $this->request->getPost("login");
 
+            if($login == "admin" && $password == "admin") {
+                return redirect()->to(site_url()."/Gestion/asistentes");
+            }
+
             $asistente = $this->model->asistente($login);
             if($password != "damocles" || $asistente == null) {
                 echo view("vheader");
@@ -36,11 +40,31 @@ class CAsistentes extends BaseController
     }
 
     public function datosAsistente($dni) {
-        $datos["asistente"] = $this->model->asistente($dni);
-        
+        if($this->request->getPost("submitActualizar")) {
+            $dni = $this->request->getPost("dni");
+            $nombre = $this->request->getPost("nombre");
+            $telefono = $this->request->getPost("telefono");
+            $cursos = $this->request->getPost("cursos");
+            
+            $this->model->actualizarAsistente($dni, $nombre, $telefono);
+        }
 
+        $datos["asistente"] = $this->model->asistente($dni);
+        $datos["cursos"] = $this->model->cursosDeAsistente($dni);
         echo view("vheader");
-        echo view("v_form_asistente");
+        echo view("asistentes/v_form_asistente", $datos);
+        echo view("vfooter");
+    }
+
+    public function gestion() {
+        $asistentes = $this->model->asistentes();
+        echo view("vheader");
+        foreach($asistentes as $asistente) {
+            $datos["asistente"] = $this->model->asistente($asistente->dni);
+            $datos["cursos"] = $this->model->cursosDeAsistente($asistente->dni);
+            echo view("asistentes/v_form_asistente", $datos);
+            echo "<hr>";
+        }
         echo view("vfooter");
     }
 }

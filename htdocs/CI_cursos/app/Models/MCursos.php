@@ -131,6 +131,32 @@ class MCursos extends Model {
     }
 
     public function cursosDeAsistente($dni) {
-        $sql = "SELECT temas.tema, cursos.dia from temas, cursos, asistencias where temas.idtema = cursos.idtema and asistencias.idcurso = cursos.idcurso and asistencias.dni = '$dni'";
+        $sql = "SELECT temas.tema, cursos.dia, cursos.idcurso from temas, cursos, asistencias where temas.idtema = cursos.idtema and asistencias.idcurso = cursos.idcurso and asistencias.dni = '$dni'";
+        $rs = $this->bd->query($sql);
+        return $rs->getResultObject();
+    }
+
+    public function asistentes() {
+        $sql = "SELECT dni from asistentes";
+        $rs = $this->bd->query($sql);
+        return $rs->getResultObject();
+    }
+
+    public function actualizarAsistente($dni, $nombre, $telefono) {
+        $sql = "UPDATE asistentes set nombre='$nombre', telefono = '$telefono' where dni = '$dni'";
+        $actualizado = $this->bd->query($sql);
+        if($actualizado) {
+            return true;
+        }
+        return false;
+    }
+
+    public function eliminarAsistencias($dni, $cursos) {
+        $sql = "DELETE from asistencias where dni = '$dni' and idcurso not in ($cursos)";
+        $borrado = $this->bd->query($sql);
+        if($borrado) {
+            return true;
+        }
+        return false;
     }
 }
