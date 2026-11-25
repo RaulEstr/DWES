@@ -12,3 +12,6 @@ $routes->match(["GET", "POST"], "/categorias/actualizar/(:any)", "CCategorias::a
 
 // Ejercicio 3
 $routes->get("/productos", "CProductos::index");
+$routes->get("/productos/borrar/(:any)", "CProductos::borrar/$1");
+$routes->match(["GET", "POST"], "/productos/nuevo", "CProductos::nuevo");
+$routes->match(["GET", "POST"], "/productos/actualizar/(:any)", "CProductos::actualizar/$1");

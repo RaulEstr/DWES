@@ -13,9 +13,4 @@ class MProductos extends Model
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = ["nombre", "precio", "stock", "categoria"];
-
-    
-
 }
-
-
