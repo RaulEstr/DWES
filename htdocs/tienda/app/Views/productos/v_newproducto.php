@@ -2,7 +2,7 @@
 
 /**
  * @var array $categorias // Array asociativo
-    // id (int), nombre (string)
+    // id => nombre
 **/
 
 echo "<h2>INSERTA NUEVO PRODUCTO</h2>";

@@ -15,3 +15,11 @@ $routes->get("/productos", "CProductos::index");
 $routes->get("/productos/borrar/(:any)", "CProductos::borrar/$1");
 $routes->match(["GET", "POST"], "/productos/nuevo", "CProductos::nuevo");
 $routes->match(["GET", "POST"], "/productos/actualizar/(:any)", "CProductos::actualizar/$1");
+
+// Explicacion clase
+$routes->get("/productos/caros", "CProductos::caros");
+$routes->get("/productos/entre/(:any)/(:any)", "CProductos::entre/$1/$2");
+$routes->get("/productos/completos", "CProductos::completos");
+$routes->get("/productos/cuantossinstock", "CProductos::cuantos_sin_stock");
+// $routes->view("/plantilla","plantillas/v_usaplantilla");
+$routes->match(["GET", "POST"], "clientes", "CClientes::alta");

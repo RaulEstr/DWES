@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @var array $productos // Array de MProductos
+ * @var array $productos // Array de objetos MProductos
  // (int) id, (string) nombre, (float) precio, (int) stock, (string) categoria 
 **/
 

@@ -2,7 +2,9 @@
 
 /**
  * @var object $producto // Objeto MProductos
- // (int) id, (string) nombre, (float) precio, (int) stock, (string) categoria 
+ // (int) id, (string) nombre, (float) precio, (int) stock, (int) categoria 
+ * @var array $categorias // Array asocaitivo
+ // id => nombre
 **/
 
 echo "<h2>ACTUALIZANDO PRODUCTO</h2>";

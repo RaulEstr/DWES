@@ -31,13 +31,8 @@ class CProductos extends BaseController
     }
 
     public function nuevo() {
-
         if($this->request->is("GET")) {
-            $datos1["productos"] = $this->prodModel
-            ->select("productos.id, productos.nombre, precio, stock, categorias.nombre as categoria")
-            ->join("categorias", "categorias.id = productos.categoria")
-            ->orderBy("categoria")
-            ->findAll();
+            $datos1["productos"] = $this->prodModel->prodsConNombreCategoria(); 
 
             $categorias = $this->categModel->findAll();
             $datos2["categorias"] = [];
@@ -59,11 +54,7 @@ class CProductos extends BaseController
 
     public function actualizar(int $id) {
         if($this->request->is("GET")) {
-            $datos1["productos"] = $this->prodModel
-            ->select("productos.id, productos.nombre, precio, stock, categorias.nombre as categoria")
-            ->join("categorias", "categorias.id = productos.categoria")
-            ->orderBy("categoria")
-            ->findAll();
+            $datos1["productos"] = $this->prodModel->prodsConNombreCategoria(); 
             $datos2["producto"] = $this->prodModel->find($id);
             $categorias = $this->categModel->findAll();
             $datos2["categorias"] = [];
@@ -79,5 +70,24 @@ class CProductos extends BaseController
                 return redirect()->to("/productos");
             }
         }
+    }
+
+    public function caros() {
+        $datos["productos"] = $this->prodModel->prodsCaros();
+        return view("v_header").view("productos/v_solo_productos", $datos).view("v_footer");
+    }
+
+    public function entre(float $min, float $max) {
+        $datos["productos"] = $this->prodModel->prodsEnRango($min, $max);
+        return view("v_header").view("productos/v_solo_productos", $datos).view("v_footer");
+    }
+
+    public function completos() {
+        $datos["productos"] = $this->prodModel->prodsConNombreCategoria();
+        return view("v_header").view("productos/v_solo_productos", $datos).view("v_footer");
+    }
+
+    public function cuantos_sin_stock() {
+        echo "Productos sin stock: ".$this->prodModel->prodsSinStock();
     }
 }
