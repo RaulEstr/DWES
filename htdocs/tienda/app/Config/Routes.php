@@ -23,3 +23,8 @@ $routes->get("/productos/completos", "CProductos::completos");
 $routes->get("/productos/cuantossinstock", "CProductos::cuantos_sin_stock");
 // $routes->view("/plantilla","plantillas/v_usaplantilla");
 $routes->match(["GET", "POST"], "clientes", "CClientes::alta");
+
+// Ejercicio 4
+$routes->get("/tarjetas/grabar/(:any)", "CTarjetas::grabar/$1");
+$routes->get("/tarjetas/reset/(:any)", "CTarjetas::reset/$1");
+$routes->match(["GET", "POST"], "/tarjetas/(:any)", "CTarjetas::tarjeta/$1");

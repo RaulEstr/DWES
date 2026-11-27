@@ -14,15 +14,19 @@ class CClientes extends BaseController
     }
 
     public function alta() {
-
         if($this->request->getPost("submit1")) {
             $nuevoCli = new stdClass();
             $nuevoCli->nombre = $this->request->getPost("nombre");
             $nuevoCli->apellido1 = $this->request->getPost("apellido1");
             $nuevoCli->apellido2 = $this->request->getPost("apellido2");
+
+            if(!$this->request->getPost("sexo")) {
+                return redirect()->back()->with("errorsexo", "Debes elegir un sexo")->withInput();
+            }
+
             $nuevoCli->sexo = $this->request->getPost("sexo");
             $nuevoCli->fecha_nac = $this->request->getPost("fecha_nac");
-            $this->session->set("nuevocli", $nuevoCli);
+            $this->session->set("nuevoCli", $nuevoCli);
             $this->session->set("pasoAlta", 1);
         }
 
@@ -36,6 +40,22 @@ class CClientes extends BaseController
             $this->session->set("pasoAlta", 2);
         }
 
+        if($this->request->getPost("submit3")) {
+            helper("gustos");
+            $posts = $this->request->getPost();
+            unset($posts['submit3']);
+            $puntuacion = 0;
+            foreach($posts as $gusto=>$valor) {
+                $puntuacion += $valor * (gustos[$gusto]/100);
+            }
+            $nuevoCli = $this->session->get("nuevoCli");
+            $nuevoCli->ranking = $puntuacion;
+            $this->clientModel->insert($nuevoCli);
+            $this->session->setFlashdata("finalaltacliente", "Cliente $nuevoCli->nombre registrado");
+            $this->session->remove("nuevoCli");
+            $this->session->remove("pasoAlta");
+        }
+
         switch($this->session->get("pasoAlta")) {
             case null:
                 return view("clientes/v_altacliente1");
@@ -43,7 +63,6 @@ class CClientes extends BaseController
                 return view("clientes/v_altacliente2");
             case 2:
                 return view("clientes/v_altacliente3");
-            case 3:
         }        
         helper("gustos");
     }
